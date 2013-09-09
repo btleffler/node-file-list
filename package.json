@@ -1,0 +1,26 @@
+{
+  "name": "file-list",
+  "version": "0.0.1",
+  "author": "btleffler <btleffler@gmail.com>",
+  "description": "Do what other web servers do by default!",
+  "scripts": {
+    "start": "node file-list.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/btleffler/node-file-list.git"
+  },
+  "keywords": [
+    "file",
+    "list"
+  ],
+  "dependencies" : {
+    "express": "3.4.x",
+    "jade": "*"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  }
+}
+
