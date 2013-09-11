@@ -5,10 +5,15 @@ function renderDirectory (req, res, stats) {
     fs.readdir(req.path, function (err, files) {
         if (err)
             fileNotFound(res);
+        
+        // Allow for navigation back
+        files.unshift("..");
+            
+        console.log(files);
 
-        res.render("directory", {
+        return res.render("directory", {
             "title": req.path,
-            "files": files.unshift("..") // Allow for navigation back
+            "files": files
         });
     });
 }
@@ -19,7 +24,7 @@ function renderFile (req, res, stats) {
 }
 
 function fileNotFound(res) {
-    res.status(404);
+    return res.status(404).redirect('/');
 }
 
 exports.file = function fileRoute (req, res){
