@@ -3,6 +3,24 @@ var fs = require("fs"),
     config = require("../config"),
     root_dir = config.get("root_dir") + '/';
 
+function FileRouter (root_directory) {
+	this.pathHelper = require("path");
+	this.config = require("../config");
+	this.fsHelper = require("fs");
+	
+	// Figure out root directory, default to what's in config
+	this.root_directory = typeof root_directory === "string" ? root_directory : this.config.get("root_dir");
+	
+	if (!this.root_directory)
+		throw new Error("Invalid root directory");
+	
+	return this;
+}
+
+FileRouter.prototype.renderDirectory = function renderDirectory (req, res, stats, directory) {
+	
+}
+
 function renderDirectory (req, res, stats, directory) {
     fs.readdir(directory, function (err, files) {
         if (err)
