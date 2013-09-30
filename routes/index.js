@@ -3,36 +3,38 @@ var fs = require("fs"),
     config = require("../config"),
     root_dir = config.get("root_dir") + '/';
 
-function FileRouter (root_directory) {
-	this.pathHelper = require("path");
-	this.config = require("../config");
-	this.fsHelper = require("fs");
-	
-	// Figure out root directory, default to what's in config
-	this.root_directory = typeof root_directory === "string" ? root_directory : this.config.get("root_dir");
-	
-	if (!this.root_directory)
-		throw new Error("Invalid root directory");
-	
-	return this;
-}
+function getBreadCrumbs (path) {
+    var parts = path.split(/[\\\/]/),
+    	i = 0,
+    	len = parts.length,
+    	part;
+    
+    for (; i < len; i++) {
+	part = {};
+	part.name = parts[i] || '/';
 
-FileRouter.prototype.renderDirectory = function renderDirectory (req, res, stats, directory) {
-	
+	if (part.name !== '/')
+	    part.path = path.substring(0, path.indexOf(parts[i]) + parts[i].length);
+	else
+	    part.path = '/';
+
+	parts[i] = part;
+    }
+    
+    console.log(parts);
+    
+    return parts;
 }
 
 function renderDirectory (req, res, stats, directory) {
     fs.readdir(directory, function (err, files) {
         if (err)
             fileNotFound(res);
-        
-        // Allow for navigation back
-        if (req.path !== '/')
-        	files.unshift("..");
 
         return res.render("directory", {
             "title": req.path,
-            "files": files
+            "files": files,
+            "breadcrumbs": getBreadCrumbs(req.path)
         });
     });
 }
@@ -49,6 +51,7 @@ function fileNotFound(req, res) {
     });
 }
 
+// Parse the request path and figure out how to respond
 exports.file = function fileRoute (req, res){
     var uri = path.normalize(req.path),
     	directory_or_file;
@@ -73,4 +76,3 @@ exports.file = function fileRoute (req, res){
         });
     });
 };
-

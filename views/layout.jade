@@ -2,6 +2,14 @@ doctype 5
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/slate/bootstrap.min.css", rel="stylesheet", media="screen")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
   body
-    block content
+    .navbar-fixed-top
+        block nav
+    .container
+        .row
+            .span3.offset3
+                block content
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js")
+    script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js")
