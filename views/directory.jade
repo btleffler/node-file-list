@@ -1,10 +1,20 @@
 extends layout
 
 block nav
-    ul.nav
-        for breadcrumb in breadcrumbs
-            li
-                a(href=breadcrumb.path)= breadcrumb.name
+    .navbar-header
+        button.navbar-toggle(type="button",data-toggle="collapse",data-target=".navbar-ex1-collapse")
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+        a.navbar-brand(href="/") Files
+    .collapse.navbar-collapse.navbar-ex1-collapse
+        ul.nav.navbar-nav
+            for breadcrumb in breadcrumbs.parts
+                li
+                    a(href=breadcrumb.path)= breadcrumb.name
+            li.active
+                a(href=breadcrumbs.lastPart.path)= breadcrumbs.lastPart.name
 
 block content
     table.table.table-hover

@@ -6,8 +6,12 @@ var fs = require("fs"),
 function getBreadCrumbs (path) {
     var parts = path.split(/[\\\/]/),
     	i = 0,
-    	len = parts.length,
-    	part;
+    	len, part, lastPart;
+    
+    // Get rid of the unwanted '' in front and save the last one separately
+    parts.shift();
+    lastPart = parts.pop();
+    len = parts.length;
     
     for (; i < len; i++) {
 	part = {};
@@ -21,9 +25,15 @@ function getBreadCrumbs (path) {
 	parts[i] = part;
     }
     
-    console.log(parts);
+    // Do the last part separate so we can easily keep it separate in the view
+    // And this is way too complicated for the retardedly simple task that I'm
+    // attempting to accomplish.
+    lastPart = {
+	"name": lastPart || '/',
+	"path": path.substring(0, path.indexOf(lastPart) + lastPart.length)
+    };
     
-    return parts;
+    return { "parts": parts, "lastPart": lastPart };
 }
 
 function renderDirectory (req, res, stats, directory) {
