@@ -7,7 +7,12 @@ var path = require("path"),
     util = require("util"),
     incompleteFiles;
 
-function File (path, collector, index) {
+/*
+ * 
+ * File Object
+ * 
+ */
+exports.File = function File (path, collector, index) {
     var self = this;
 
     Emitter.call(this);
@@ -45,6 +50,11 @@ File.prototype.destroy = function FileDestory () {
     this.collector.files.splice(this.index, 1);
 };
 
+/*
+ * 
+ * FileCollector Object
+ * 
+ */
 exports.FileCollector = function FileCollector (directory) {
     var self = this;
 
@@ -53,19 +63,35 @@ exports.FileCollector = function FileCollector (directory) {
 
     path.exists(directory, function (exists)) {
 	if (!exists)
-	    throw new Error("Sorry, but " . directory . " doesn't exist.");
+	    throw new Error("Sorry, but that file doesn't exist.");
 	
-	fs.readdir(directory, function (err, files) {
+	fs.lstat(directory, function (err, stats) {
 	    if (err) throw err;
 	    
-	    i = 0;
-	    len = files.length;
-	    incompleteFiles = len;
+	    // May as well save this information
+	    self.stats = stats;
 	    
-	    for (; i < len; i++)
-		this.files.push(new File(files[i], self, i));
+	    // This is a directory, and we should find the files in it
+	    if(stats.isDirectory()) {
+		fs.readdir(directory, function (err, files) {
+		    if (err) throw err;
+		    
+		    i = 0;
+		    len = files.length;
+		    incompleteFiles = len;
+		    
+		    // Create the file objects that belong to this collector
+		    for (; i < len; i++)
+			this.files.push(new File(files[i], self, i));
+		});
+	    } else { // This is a file, we can just get the info on it
+		self = new File(directory, false, false, stats);
+	    }
 	});
     });
+    
+    // This may or may not be a FileCollector. Sorry!
+    return self;
 };
 
 util.inherits(FileCollector, Emitter);
