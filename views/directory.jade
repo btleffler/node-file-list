@@ -20,8 +20,11 @@ block content
     table.table.table-hover
         thead
             tr
+                th
                 th Name
         tbody
             for file in files
                 tr
+                    td
+                        span.glyphicon.glyphicon-save
                     td= file
