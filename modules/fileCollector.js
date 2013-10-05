@@ -2,9 +2,12 @@
  * Files Module
  */
 var path = require("path"),
-    fs = require("fs");
+    fs = require("fs"),
+    Emitter = require("events").eventEmitter,
+    util = require("util");
 
-function file (path) {
+function File (path) {
+    Emitter.call(this);
     // Get information about the file
     // Name
     // Size
@@ -16,7 +19,12 @@ function file (path) {
     };
 }
 
-exports.fileCollector = function fileCollector (directory) {
+util.inherits(File, Emitter);
+
+exports.FileCollector = function FileCollector (directory) {
+    Emitter.call(this);
+    this.files = [];
+
     path.exists(directory, function (exists)) {
 	if (!exists) throw new Error("Sorry, but " . directory . " doesn't exist.");
 	
@@ -27,7 +35,9 @@ exports.fileCollector = function fileCollector (directory) {
 	    if (err) throw new Error(err);
 	    
 	    for (; i < len; i++)
-		files[i] = new File(files[i]);
+		this.files.push(new File(files[i]));
 	});
     });
 };
+
+util.inherits(FileCollector, Emitter);
