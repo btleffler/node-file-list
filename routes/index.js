@@ -3,37 +3,35 @@ var fs = require("fs"),
     config = require("../config"),
     root_dir = config.get("root_dir") + '/';
 
-function getBreadCrumbs (path) {
-    var parts = path.split(/[\\\/]/),
-    	i = 0,
-    	len, part, lastPart;
+function getBreadCrumb (part, fullPath) {
+    var name = part || path.sep;
+    return {
+	"name": name,
+	"path": fullPath.substring(0, fullPath.indexOf(name) + name.length)
+    };
+}
+
+function getBreadCrumbs (fullPath) {
+    var parts, i, len, part, lastPart;
     
-    // Get rid of the unwanted '' in front and save the last one separately
-    parts.shift();
+    // Special case
+    if (fullPath === path.sep) {
+	return {
+	    "parts": [],
+	    "lastPart": getBreadCrumb(path.sep, fullPath)
+	};
+    }
+    
+    parts = fullPath.split(path.sep);
+    i = 0;
     lastPart = parts.pop();
     len = parts.length;
     
-    for (; i < len; i++) {
-	part = {};
-	part.name = parts[i] || '/';
-
-	if (part.name !== '/')
-	    part.path = path.substring(0, path.indexOf(parts[i]) + parts[i].length);
-	else
-	    part.path = '/';
-
-	parts[i] = part;
-    }
+    // Get the bread crumbs before where we are right now
+    for (; i < len; i++)
+	parts[i] = getBreadCrumb(parts[i], fullPath);
     
-    // Do the last part separate so we can easily keep it separate in the view
-    // And this is way too complicated for the retardedly simple task that I'm
-    // attempting to accomplish.
-    lastPart = {
-	"name": lastPart || '/',
-	"path": path.substring(0, path.indexOf(lastPart) + lastPart.length)
-    };
-    
-    return { "parts": parts, "lastPart": lastPart };
+    return { "parts": parts, "lastPart": getBreadCrumb(lastPart, fullPath) };
 }
 
 function renderDirectory (req, res, stats, directory) {
