@@ -5,6 +5,7 @@ var path = require("path"),
     fs = require("fs"),
     Emitter = require("events").eventEmitter,
     util = require("util"),
+    filesize = require("filesize");
     incompleteFiles;
 
 /*
@@ -12,32 +13,43 @@ var path = require("path"),
  * File Object
  * 
  */
-exports.File = function File (path, collector, index) {
+exports.File = function File (path, collector, index, stats) {
     var self = this;
 
     Emitter.call(this);
+
     this.collector = collector;
     this.index = index;
+    this.path = path;
+    this.name = path.basename(path);
+    this.extension = path.extname(this.name);
+    this.stats = stats;
+    
+    function finish() {
+	self.emit("ready");
+	
+	if (--incompleteFiles <= 0)
+	    self.collector.emit("ready");
+    }
     
     path.exists(path, function (exists) {
-	var index;
-
 	// Huh?
 	if (!exists)
 	    self.destroy();
 	
-	fs.lstat(path, function (err, stats) {
-	    if (err) {
-		console.log(err);
-		self.destroy();
-	    }
+	if (self.stats)
+	    finish();
+	else {
+	    fs.lstat(path, function (err, stats) {
+		if (err) {
+		    console.log(err);
+		    self.destroy();
+		}
 
-	    self.stats = stats;
-	    self.emit("ready");
-	    
-	    if (--incompleteFiles <= 0)
-		self.collector.emit("ready");
-	});
+		self.stats = stats;
+		finish();
+	    });
+	}
     });
 
     return this;
@@ -49,6 +61,30 @@ util.inherits(File, Emitter);
 File.prototype.destroy = function FileDestory () {
     this.collector.files.splice(this.index, 1);
 };
+
+File.prototype.isBlockDevice = function isBlockDevice() {
+    return this.stats.isBlockDevice();
+}
+
+File.prototype.isCharacterDevice = function isCharacterDevice() {
+    return this.stats.isCharacterDevice();
+}
+
+File.prototype.isSymbolicLink = function isSymbolicLink() {
+    return this.stats.isSymbolicLink();
+}
+
+File.prototype.isFIFO = function isFIFO() {
+    return this.stats.isFIFO();
+}
+
+File.prototype.isSocket = function isSocket() {
+    return this.stats.isSocket();
+}
+
+File.prototype.size = function fileSize () {
+    return filesize(this.stats.size);
+}
 
 /*
  * 
@@ -85,12 +121,13 @@ exports.FileCollector = function FileCollector (directory) {
 			this.files.push(new File(files[i], self, i));
 		});
 	    } else { // This is a file, we can just get the info on it
-		self = new File(directory, false, false, stats);
+		self.file = new File(directory, self, 0, stats);
+		self.files = [ self.file ];
+		self.emit("single");
 	    }
 	});
     });
-    
-    // This may or may not be a FileCollector. Sorry!
+
     return self;
 };
 
