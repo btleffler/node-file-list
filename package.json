@@ -18,7 +18,8 @@
     "express": "3.4.x",
     "jade": "0.35.x",
     "commander": "2.0.x",
-    "nconf": "0.6.x"
+    "nconf": "0.6.x",
+    "filesize": "1.10.x"
   },
   "license": "MIT",
   "engines": {
