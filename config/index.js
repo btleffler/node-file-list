@@ -1,3 +1,9 @@
-exports =
-module.exports =
-require("nconf").file({ "file": "./config/config.json" });
+var config = require("nconf").file({ "file": "./config/config.json" }),
+    path = require("path"),
+    pathSepExp = new RegExp(path.sep + '$'),
+    root_dir = config.get("root_dir");
+
+if (!root_dir.match(pathSepExp))
+    root_dir += path.sep;
+
+exports.root_dir = root_dir;
