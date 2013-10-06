@@ -1,7 +1,7 @@
 var path = require("path"),
     Files = require("../modules"),
     config = require("../config"),
-    root_dir = config.get("root_dir") + '/';
+    root_dir = config.root_dir;
 
 // Parse the request path and figure out how to respond
 exports.file = function fileRoute (req, res){
@@ -14,14 +14,14 @@ exports.file = function fileRoute (req, res){
     Files.FileCollector.init(path.normalize(root_dir + req.path))
     	.on("ready", function (directory) {
             return res.render("directory", {
-                "title": directory.path,
+                "title": directory.getPath(),
                 "files": directory.files,
                 "breadcrumbs": directory.getBreadCrumbs()
             });
     	}).on("single", function (file) {
     	    // Render single file
     	}).on("notFound", function (directory_or_file) {
-    	    var path = directory_or_file.path;
+    	    var path = directory_or_file.getPath();
 
     	    return res.status(404).render("404", {
     		"title": path,
