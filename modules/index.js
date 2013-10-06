@@ -1,11 +1,13 @@
 /*
  * Files Module
  */
-var path = require("path"),
+var pathLib = require("path"),
     fs = require("fs"),
-    Emitter = require("events").eventEmitter,
+    Emitter = require("events").EventEmitter,
     util = require("util"),
-    filesize = require("filesize");
+    filesize = require("filesize"),
+    config = require("../config"),
+    root_dir = config.get("root_dir") + '/',
     incompleteFiles;
 
 /*
@@ -13,7 +15,7 @@ var path = require("path"),
  * File Object
  * 
  */
-exports.File = function File (path, collector, index, stats) {
+var File = function File (path, collector, index, stats) {
     var self = this;
 
     Emitter.call(this);
@@ -21,18 +23,18 @@ exports.File = function File (path, collector, index, stats) {
     this.collector = collector;
     this.index = index;
     this.path = path;
-    this.name = path.basename(path);
-    this.extension = path.extname(this.name);
+    this.name = pathLib.basename(path);
+    this.extension = pathLib.extname(this.name);
     this.stats = stats;
     
     function finish() {
-	self.emit("ready");
+	self.emit("ready", self);
 	
 	if (--incompleteFiles <= 0)
-	    self.collector.emit("ready");
+	    self.collector.emit("ready", self.collector);
     }
     
-    path.exists(path, function (exists) {
+    fs.exists(path, function (exists) {
 	// Huh?
 	if (!exists)
 	    self.destroy();
@@ -40,7 +42,7 @@ exports.File = function File (path, collector, index, stats) {
 	if (self.stats)
 	    finish();
 	else {
-	    fs.lstat(path, function (err, stats) {
+	    fs.stat(path, function (err, stats) {
 		if (err) {
 		    console.log(err);
 		    self.destroy();
@@ -53,7 +55,11 @@ exports.File = function File (path, collector, index, stats) {
     });
 
     return this;
-}
+};
+
+File.init = function initFile (path, collector, index, stats) {
+    return new File(path, collector, index, stats);
+};
 
 util.inherits(File, Emitter);
 
@@ -86,22 +92,25 @@ File.prototype.size = function fileSize () {
     return filesize(this.stats.size);
 }
 
+exports.File = File;
+
 /*
  * 
  * FileCollector Object
  * 
  */
-exports.FileCollector = function FileCollector (directory) {
+var FileCollector = function FileCollector (directory) {
     var self = this;
 
     Emitter.call(this);
     this.files = [];
+    this.path = directory;
 
-    path.exists(directory, function (exists)) {
+    fs.exists(directory, function (exists) {
 	if (!exists)
-	    throw new Error("Sorry, but that file doesn't exist.");
+	    self.emit("notFound", self);
 	
-	fs.lstat(directory, function (err, stats) {
+	fs.stat(directory, function (err, stats) {
 	    if (err) throw err;
 	    
 	    // May as well save this information
@@ -118,12 +127,12 @@ exports.FileCollector = function FileCollector (directory) {
 		    
 		    // Create the file objects that belong to this collector
 		    for (; i < len; i++)
-			this.files.push(new File(files[i], self, i));
+			self.files.push(new File(directory + pathLib.sep + files[i], self, i));
 		});
 	    } else { // This is a file, we can just get the info on it
 		self.file = new File(directory, self, 0, stats);
 		self.files = [ self.file ];
-		self.emit("single");
+		self.emit("single", self.file);
 	    }
 	});
     });
@@ -131,4 +140,47 @@ exports.FileCollector = function FileCollector (directory) {
     return self;
 };
 
+FileCollector.init = function initFileCollector(directory) {
+    return new FileCollector(directory);
+};
+
 util.inherits(FileCollector, Emitter);
+
+FileCollector.prototype.getPath = function getPath () {
+    return this.path.replace(root_dir, '');
+};
+
+FileCollector.prototype.getBreadCrumbs = function getBreadCrumbs () {
+    var self = this,
+    	path = this.getPath(),
+    	parts, i, len, part, lastPart;
+    
+    function getBreadCrumb (part) {
+	var name = part || pathLib.sep;
+	return {
+	    "name": name,
+	    "path": path.substring(0, path.indexOf(name) + name.length)
+	};
+    }
+    
+    // Special case
+    if (path === pathLib.sep) {
+	return {
+	    "parts": [],
+	    "lastPart": getBreadCrumb(pathLib.sep)
+	};
+    }
+    
+    parts = path.split(pathLib.sep);
+    i = 0;
+    lastPart = parts.pop();
+    len = parts.length;
+    
+    // Get the bread crumbs before where we are right now
+    for (; i < len; i++)
+	parts[i] = getBreadCrumb(parts[i]);
+    
+    return { "parts": parts, "lastPart": getBreadCrumb(lastPart) };
+};
+
+exports.FileCollector = FileCollector;
