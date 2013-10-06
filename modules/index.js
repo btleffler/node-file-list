@@ -1,13 +1,10 @@
-/*
- * Files Module
- */
 var pathLib = require("path"),
     fs = require("fs"),
     Emitter = require("events").EventEmitter,
     util = require("util"),
     filesize = require("filesize"),
     config = require("../config"),
-    root_dir = config.get("root_dir") + '/',
+    root_dir = config.root_dir,
     incompleteFiles;
 
 /*
@@ -36,8 +33,10 @@ var File = function File (path, collector, index, stats) {
     
     fs.exists(path, function (exists) {
 	// Huh?
-	if (!exists)
+	if (!exists) {
 	    self.destroy();
+	    return;
+	}
 	
 	if (self.stats)
 	    finish();
@@ -92,6 +91,10 @@ File.prototype.size = function fileSize () {
     return filesize(this.stats.size);
 }
 
+File.prototype.getPath = function fileGetPath () {
+    return this.path.replace(root_dir, '');
+}
+
 exports.File = File;
 
 /*
@@ -107,8 +110,10 @@ var FileCollector = function FileCollector (directory) {
     this.path = directory;
 
     fs.exists(directory, function (exists) {
-	if (!exists)
+	if (!exists) {
 	    self.emit("notFound", self);
+	    return;
+	}
 	
 	fs.stat(directory, function (err, stats) {
 	    if (err) throw err;
@@ -146,7 +151,7 @@ FileCollector.init = function initFileCollector(directory) {
 
 util.inherits(FileCollector, Emitter);
 
-FileCollector.prototype.getPath = function getPath () {
+FileCollector.prototype.getPath = function fileCollectorGetPath () {
     return this.path.replace(root_dir, '');
 };
 
