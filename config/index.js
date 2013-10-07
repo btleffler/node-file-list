@@ -3,7 +3,7 @@ var config = require("nconf").file({ "file": "./config/config.json" }),
     pathSepExp = new RegExp(path.sep + '$'),
     root_dir = config.get("root_dir");
 
-if (!root_dir.match(pathSepExp))
-    root_dir += path.sep;
+if (root_dir.match(pathSepExp))
+    root_dir = root_dir.replace(pathSepExp, '');
 
 exports.root_dir = root_dir;
