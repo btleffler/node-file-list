@@ -27,4 +27,5 @@ block content
                 tr
                     td
                         span.glyphicon.glyphicon-save
-                    td= file.name
+                    td
+                        a(href=file.getPath(), title=file.name)= file.name
