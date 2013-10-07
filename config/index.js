@@ -7,3 +7,4 @@ if (root_dir.match(pathSepExp))
     root_dir = root_dir.replace(pathSepExp, '');
 
 exports.root_dir = root_dir;
+exports.pathSepExp = pathSepExp;
