@@ -35,6 +35,8 @@ var File = function File (path, collector, index, stats) {
 	// Huh?
 	if (!exists) {
 	    self.destroy();
+	    finish();
+	    console.log("Something is wrong with this. " + path);
 	    return;
 	}
 	
@@ -121,6 +123,10 @@ var FileCollector = function FileCollector (directory) {
 	    // May as well save this information
 	    self.stats = stats;
 	    
+	    // Make sure we can send the correct paths to the File objects
+	    if (stats.isDirectory() && !directory.match(config.pathSepExp))
+		directory += pathLib.sep;
+	    
 	    // This is a directory, and we should find the files in it
 	    if(stats.isDirectory()) {
 		fs.readdir(directory, function (err, files) {
@@ -132,7 +138,7 @@ var FileCollector = function FileCollector (directory) {
 		    
 		    // Create the file objects that belong to this collector
 		    for (; i < len; i++)
-			self.files.push(new File(directory + pathLib.sep + files[i], self, i));
+			self.files.push(new File(directory + files[i], self, i));
 		});
 	    } else { // This is a file, we can just get the info on it
 		self.file = new File(directory, self, 0, stats);
@@ -179,6 +185,11 @@ FileCollector.prototype.getBreadCrumbs = function getBreadCrumbs () {
     parts = path.split(pathLib.sep);
     i = 0;
     lastPart = parts.pop();
+    
+    // There has to be a better way
+    if (lastPart === '')
+	lastPart = parts.pop();
+
     len = parts.length;
     
     // Get the bread crumbs before where we are right now
