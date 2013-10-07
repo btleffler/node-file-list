@@ -3,7 +3,7 @@
 var program = require("commander"),
 	fs = require("fs"),
 	path = require("path"),
-	config = require("./config");
+	config = require("./config").config;
 
 program
 	.version("0.0.1")

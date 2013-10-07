@@ -112,40 +112,40 @@ var FileCollector = function FileCollector (directory) {
     this.path = directory;
 
     fs.exists(directory, function (exists) {
-	if (!exists) {
-	    self.emit("notFound", self);
-	    return;
-	}
-	
-	fs.stat(directory, function (err, stats) {
-	    if (err) throw err;
-	    
-	    // May as well save this information
-	    self.stats = stats;
-	    
-	    // Make sure we can send the correct paths to the File objects
-	    if (stats.isDirectory() && !directory.match(config.pathSepExp))
-		directory += pathLib.sep;
-	    
-	    // This is a directory, and we should find the files in it
-	    if(stats.isDirectory()) {
-		fs.readdir(directory, function (err, files) {
+		if (!exists) {
+		    self.emit("notFound", self);
+		    return;
+		}
+		
+		fs.stat(directory, function (err, stats) {
 		    if (err) throw err;
 		    
-		    i = 0;
-		    len = files.length;
-		    incompleteFiles = len;
+		    // May as well save this information
+		    self.stats = stats;
 		    
-		    // Create the file objects that belong to this collector
-		    for (; i < len; i++)
-			self.files.push(new File(directory + files[i], self, i));
+		    // Make sure we can send the correct paths to the File objects
+		    if (stats.isDirectory() && !directory.match(config.pathSepExp))
+		    	directory += pathLib.sep;
+		    
+		    // This is a directory, and we should find the files in it
+		    if(stats.isDirectory()) {
+				fs.readdir(directory, function (err, files) {
+				    if (err) throw err;
+				    
+				    i = 0;
+				    len = files.length;
+				    incompleteFiles = len;
+				    
+				    // Create the file objects that belong to this collector
+				    for (; i < len; i++)
+				    	self.files.push(new File(directory + files[i], self, i));
+				});
+		    } else { // This is a file, we can just get the info on it
+				self.file = new File(directory, self, 0, stats);
+				self.files = [ self.file ];
+				self.emit("single", self.file);
+		    }
 		});
-	    } else { // This is a file, we can just get the info on it
-		self.file = new File(directory, self, 0, stats);
-		self.files = [ self.file ];
-		self.emit("single", self.file);
-	    }
-	});
     });
 
     return self;

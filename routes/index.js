@@ -5,10 +5,11 @@ var path = require("path"),
 
 // Parse the request path and figure out how to respond
 exports.file = function fileRoute (req, res){
-    var uri = path.normalize(req.path);
+    var uri = path.normalize(req.path),
+    	browserSafeUri = path.sep !== '/' ? uri.replace(path.sep, '/') : uri;
     
-    if (uri !== req.path)
-        return res.redirect(uri);
+    if (browserSafeUri !== req.path)
+        return res.redirect(browserSafeUri);
 
     // Figure out what's going on and render accordingly
     Files.FileCollector.init(path.normalize(root_dir + req.path))
