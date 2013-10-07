@@ -13,6 +13,7 @@ exports.file = function fileRoute (req, res){
     // Figure out what's going on and render accordingly
     Files.FileCollector.init(path.normalize(root_dir + req.path))
     	.on("ready", function (directory) {
+    	    // Render a list of files in the directory
             return res.render("directory", {
                 "title": directory.getPath(),
                 "files": directory.files,
@@ -21,6 +22,7 @@ exports.file = function fileRoute (req, res){
     	}).on("single", function (file) {
     	    // Render single file
     	}).on("notFound", function (directory_or_file) {
+    	    // 404
     	    var path = directory_or_file.getPath();
 
     	    return res.status(404).render("404", {
