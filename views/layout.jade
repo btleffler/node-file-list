@@ -7,6 +7,8 @@ html
         body { margin-top: 70px; }
         tbody td:hover { cursor: pointer; }
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js")
+    script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js")
   body
     nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
         block nav
@@ -14,5 +16,3 @@ html
         .row
             .col-sm-4.col-sm-offset-1
                 block content
-    script(src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js")
-    script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js")

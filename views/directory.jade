@@ -29,3 +29,15 @@ block content
                         span.glyphicon.glyphicon-save
                     td
                         a(href=file.getPath(), title=file.name)= file.name
+    script(type="text/javascript").
+        $(function () {
+            var $anchors = $('a');
+            
+            $anchors.each(function(index, element) {
+                var $this = $(element);
+                
+                $this.parent("td").click(function () {
+                    window.location = $this.attr("href");
+                });
+            });
+        });
