@@ -7,7 +7,11 @@ var path = require("path"),
 exports.file = function fileRoute (req, res){
     var uri = path.normalize(req.path),
     	browserSafeUri = path.sep !== '/' ? uri.replace(path.sep, '/') : uri;
-    
+
+    // Make sure we don't have a trailing path separator
+    if (browserSafeUri.length > 1)
+	browserSafeUri = browserSafeUri.replace(config.pathSepExp, '');
+
     if (browserSafeUri !== req.path)
         return res.redirect(browserSafeUri);
 
@@ -22,6 +26,7 @@ exports.file = function fileRoute (req, res){
             });
     	}).on("single", function (file) {
     	    // Render single file
+    	    return res.sendfile(file.path);
     	}).on("notFound", function (directory_or_file) {
     	    // 404
     	    var path = directory_or_file.getPath();
