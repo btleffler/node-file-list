@@ -1,6 +1,6 @@
 var config = require("nconf").file({ "file": "./config/config.json" }),
     path = require("path"),
-    pathSepExp = new RegExp(path.sep + '$'),
+    pathSepExp = /[\\\/]$/,
     root_dir = config.get("root_dir") || '';
 
 if (root_dir.match(pathSepExp))
