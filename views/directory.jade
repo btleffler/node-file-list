@@ -28,7 +28,7 @@ block content
                     td
                         span.glyphicon.glyphicon-save
                     td
-                        a(href=file.getPath(), title=file.name)= file.name
+                        a(href=file.getPath(true), title=file.name)= file.name
     script(type="text/javascript").
         $(function () {
             var $anchors = $('a');

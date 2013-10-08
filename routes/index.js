@@ -6,7 +6,13 @@ var path = require("path"),
 // Parse the request path and figure out how to respond
 exports.file = function fileRoute (req, res){
     var uri = path.normalize(req.path),
-    	browserSafeUri = path.sep !== '/' ? uri.replace(path.sep, '/') : uri;
+    	browserSafeUri;
+    
+    // Handle windows file paths
+    if (path.sep !== '/')
+    	browserSafeUri = uri.replace(config.globalPathSepExp, '/');
+    else
+    	browserSafeUri = uri;
 
     // Make sure we don't have a trailing path separator
     if (browserSafeUri.length > 1)
@@ -20,7 +26,7 @@ exports.file = function fileRoute (req, res){
     	.on("ready", function (directory) {
     	    // Render a list of files in the directory
             return res.render("directory", {
-                "title": directory.getPath(),
+                "title": directory.getPath(true),
                 "files": directory.files,
                 "breadcrumbs": directory.getBreadCrumbs()
             });
@@ -29,7 +35,7 @@ exports.file = function fileRoute (req, res){
     	    return res.sendfile(file.path);
     	}).on("notFound", function (directory_or_file) {
     	    // 404
-    	    var path = directory_or_file.getPath();
+    	    var path = directory_or_file.getPath(true);
 
     	    return res.status(404).render("404", {
     		"title": path,
