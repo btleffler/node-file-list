@@ -1,6 +1,7 @@
 var config = require("nconf").file({ "file": "./config/config.json" }),
     path = require("path"),
     pathSepExp = /[\\\/]$/,
+    globalPathSepExp = /[\\\/]/g,
     root_dir = config.get("root_dir") || '';
 
 if (root_dir.match(pathSepExp))
@@ -8,4 +9,5 @@ if (root_dir.match(pathSepExp))
 
 exports.root_dir = root_dir;
 exports.pathSepExp = pathSepExp;
+exports.globalPathSepExp = globalPathSepExp;
 exports.config = config;

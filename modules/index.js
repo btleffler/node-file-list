@@ -7,6 +7,16 @@ var pathLib = require("path"),
     root_dir = config.root_dir,
     incompleteFiles;
 
+function makeSafePath(path, browserSep) {
+	console.log(path);
+	path = path.replace(root_dir, '');
+	
+	if (pathLib.sep !== '/' && browserSep)
+		path = path.replace(config.globalPathSepExp, '/');
+	
+	return path;
+}
+
 /*
  * 
  * File Object
@@ -95,8 +105,9 @@ File.prototype.size = function fileSize () {
     return filesize(this.stats.size);
 }
 
-File.prototype.getPath = function fileGetPath () {
-    return this.path.replace(root_dir, '');
+File.prototype.getPath = function fileGetPath (browserSep) {
+	browserSep = typeof browserSep === "undefined" ? false : browserSep;
+	return makeSafePath(this.path, browserSep);
 }
 
 exports.File = File;
@@ -160,8 +171,9 @@ FileCollector.init = function initFileCollector(directory) {
 
 util.inherits(FileCollector, Emitter);
 
-FileCollector.prototype.getPath = function fileCollectorGetPath () {
-    return this.path.replace(root_dir, '');
+FileCollector.prototype.getPath = function fileCollectorGetPath (browserSep) {
+	browserSep = typeof browserSep === "undefined" ? false : browserSep;
+    return makeSafePath(this.path, browserSep);
 };
 
 FileCollector.prototype.getBreadCrumbs = function getBreadCrumbs () {
