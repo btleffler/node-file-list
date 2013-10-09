@@ -8,7 +8,6 @@ var pathLib = require("path"),
     incompleteFiles;
 
 function makeSafePath(path, browserSep) {
-	console.log(path);
 	path = path.replace(root_dir, '');
 	
 	if (pathLib.sep !== '/' && browserSep)
@@ -105,6 +104,16 @@ File.prototype.size = function fileSize () {
     return filesize(this.stats.size);
 }
 
+File.prototype.date = function fileDate() {
+    var mtime = this.stats.mtime;
+    return mtime.toLocaleTimeString() + ' on ' + mtime.toLocaleDateString();
+}
+
+File.prototype.shortDate = function fileShortDate() {
+    // Need to research getting the locale format either MM/DD/YY or DD/MM/YY
+    return this.stats.mtime;
+}
+
 File.prototype.getPath = function fileGetPath (browserSep) {
 	browserSep = typeof browserSep === "undefined" ? false : browserSep;
 	return makeSafePath(this.path, browserSep);
@@ -122,7 +131,7 @@ var FileCollector = function FileCollector (directory) {
 
     Emitter.call(this);
     this.files = [];
-    this.path = directory;
+    this.path = directory = decodeURI(directory);
 
     fs.exists(directory, function (exists) {
 	if (!exists) {
