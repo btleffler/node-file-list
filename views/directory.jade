@@ -17,27 +17,36 @@ block nav
                 a(href=breadcrumbs.lastPart.path)= breadcrumbs.lastPart.name
 
 block content
-    table.table.table-hover
-        thead
-            tr
-                th
-                th Name
-        tbody
-            for file in files
+    if error
+        .alert.alert-danger= error
+    if files.length
+        table.table.table-hover
+            thead
                 tr
-                    td
-                        span.glyphicon.glyphicon-save
-                    td
-                        a(href=file.getPath(true), title=file.name)= file.name
-    script(type="text/javascript").
-        $(function () {
-            var $anchors = $('a');
-            
-            $anchors.each(function(index, element) {
-                var $this = $(element);
+                    th
+                    th.important Name
+                    th Size
+                    th Date
+            tbody
+                for file in files
+                    tr
+                        td
+                            span.glyphicon.glyphicon-save
+                        td.important
+                            a(href=file.getPath(true), title=file.name)= file.name
+                        td= file.size()
+                        td
+                            .longDate= file.date()
+                            .shortDate= file.shortDate();
+        script(type="text/javascript").
+            $(function () {
+                var $anchors = $('a');
                 
-                $this.parent("td").click(function () {
-                    window.location = $this.attr("href");
+                $anchors.each(function(index, element) {
+                    var $this = $(element);
+                    
+                    $this.parents("tr").click(function () {
+                        window.location = $this.attr("href");
+                    });
                 });
             });
-        });

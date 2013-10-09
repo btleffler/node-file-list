@@ -6,6 +6,8 @@ html
     style(type="text/css").
         body { margin-top: 70px; }
         tbody td:hover { cursor: pointer; }
+        th, td { width: 1px; white-space: nowrap; }
+        th.important, td.important { width: inherit; white-space: normal; }
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     script(src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js")
     script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js")
@@ -14,5 +16,5 @@ html
         block nav
     .container
         .row
-            .col-sm-4.col-sm-offset-1
+            .col-sm-10.col-sm-offset-1
                 block content
