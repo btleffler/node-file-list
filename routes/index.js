@@ -33,13 +33,13 @@ exports.file = function fileRoute (req, res){
     	}).on("single", function (file) {
     	    // Render single file
     	    return res.sendfile(file.path);
-    	}).on("notFound", function (directory_or_file) {
+    	}).on("notFound", function (directory) {
     	    // 404
-    	    var path = directory_or_file.getPath(true);
-
-    	    return res.status(404).render("404", {
-    		"title": path,
-    		"path": path
-    	    });
+    	    return res.status(404).render("directory", {
+                "title": directory.getPath(true),
+                "files": directory.files,
+                "error": "This is not the file you're looking for.",
+                "breadcrumbs": directory.getBreadCrumbs()
+            });
     	});
 };
