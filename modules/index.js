@@ -101,17 +101,19 @@ File.prototype.isSocket = function isSocket() {
 }
 
 File.prototype.size = function fileSize () {
-    return filesize(this.stats.size);
+    return filesize(this.stats.size, 2, false);
 }
 
 File.prototype.date = function fileDate() {
+    if (this.timeObject)
+	return this.timeObject;
+    
     var mtime = this.stats.mtime;
-    return mtime.toLocaleTimeString() + ' on ' + mtime.toLocaleDateString();
-}
-
-File.prototype.shortDate = function fileShortDate() {
-    // Need to research getting the locale format either MM/DD/YY or DD/MM/YY
-    return this.stats.mtime;
+    this.timeObject = {};
+    this.timeObject.time = mtime.toLocaleTimeString();
+    this.timeObject.date = mtime.toLocaleDateString();
+    
+    return this.timeObject;
 }
 
 File.prototype.getPath = function fileGetPath (browserSep) {

@@ -25,8 +25,8 @@ block content
                 tr
                     th
                     th.important Name
-                    th Size
-                    th Date
+                    th.hidden-xs Size
+                    th.hidden-xs Date
             tbody
                 for file in files
                     tr
@@ -34,10 +34,8 @@ block content
                             span.glyphicon.glyphicon-save
                         td.important
                             a(href=file.getPath(true), title=file.name)= file.name
-                        td= file.size()
-                        td
-                            .longDate= file.date()
-                            .shortDate= file.shortDate();
+                        td.hidden-xs= file.size()
+                        td.hidden-xs.date-time(title= file.date().time)= file.date().date
         script(type="text/javascript").
             $(function () {
                 var $anchors = $('a');
@@ -48,5 +46,10 @@ block content
                     $this.parents("tr").click(function () {
                         window.location = $this.attr("href");
                     });
+                });
+                
+                $('.date-time').tooltip({
+                    "placement": "auto right",
+                    "container": "body"
                 });
             });
