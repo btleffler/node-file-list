@@ -1,13 +1,6 @@
 extends layout
 
 block nav
-    .navbar-header
-        button.navbar-toggle(type="button",data-toggle="collapse",data-target=".navbar-ex1-collapse")
-            span.sr-only Toggle navigation
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-        a.navbar-brand(href="/") Files
     .collapse.navbar-collapse.navbar-ex1-collapse
         ul.nav.navbar-nav
             for breadcrumb in breadcrumbs.parts
@@ -31,7 +24,7 @@ block content
                 for file in files
                     tr
                         td
-                            span.glyphicon.glyphicon-save
+                            span(class=[ 'glyphicon', file.bootstrapIcon() ])
                         td.important
                             a(href=file.getPath(true), title=file.name)= file.name
                         td.hidden-xs= file.size()

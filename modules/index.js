@@ -121,6 +121,35 @@ File.prototype.getPath = function fileGetPath (browserSep) {
 	return makeSafePath(this.path, browserSep);
 }
 
+/*
+ * I hate this, and I feel like there has to be a better way. I freely admit
+ * that I'm not an expert on file extensions.
+ */
+File.prototype.bootstrapIcon = function fileBootstrapIcon () {
+    var iconClass = "hdd", // Default
+    	text = [ ".txt", ".doc", ".docx", ".rtf", ".pdf" ],
+    	archive = [ ".zip", ".rar", ".7z", ".dmg", ".gz" ],
+    	image = [ ".jpg", ".jpeg", ".png", ".gif", ".bmp" ],
+    	sound = [ ".mp3", ".wav", ".ape", ".flac", ".mp4", ".midi" ],
+    	video = [ ".avi", ".mkv", ".mov", ".hdmov", ".mpeg" ]
+    	extension = this.extension;
+    
+    if (extension === '')
+	iconClass = "folder-open";
+    else if (-1 !== text.indexOf(extension))
+    	iconClass = "align-justify";
+    else if (-1 !== archive.indexOf(extension))
+    	iconClass = "compressed";
+    else if (-1 !== image.indexOf(extension))
+    	iconClass = "picture";
+    else if (-1 !== sound.indexOf(extension))
+    	iconClass = "music";
+    else if (-1 !== video.indexOf(extension))
+	iconClass = "film";
+    
+    return "glyphicon-" + iconClass;
+};
+
 exports.File = File;
 
 /*
