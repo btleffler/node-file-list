@@ -32,6 +32,7 @@ exports.file = function fileRoute (req, res){
             });
     	}).on("single", function (file) {
     	    // Render single file
+    	    console.log("Starting to download: " + file.path);
     	    return res.sendfile(file.path);
     	}).on("notFound", function (directory) {
     	    // 404
