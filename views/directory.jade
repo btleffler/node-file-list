@@ -12,15 +12,15 @@ block nav
 block content
     if error
         .alert.alert-danger= error
-    if files.length
-        table.table.table-hover
-            thead
-                tr
-                    th
-                    th.important Name
-                    th.hidden-xs Size
-                    th.hidden-xs Date
-            tbody
+    table.table.table-hover
+        thead
+            tr
+                th
+                th.important Name
+                th.hidden-xs Size
+                th.hidden-xs Date
+        tbody
+            - if (files.length)
                 for file in files
                     tr
                         td
@@ -29,6 +29,12 @@ block content
                             a(href=file.getPath(true), title=file.name)= file.name
                         td.hidden-xs= file.size()
                         td.hidden-xs.date-time(title= file.date().time)= file.date().date
+            - else
+                tr
+                    td
+                    td.important No files...
+                    td.hidden-xs
+                    td.hidden-xs
         script(type="text/javascript").
             $(function () {
                 var $anchors = $('a');
