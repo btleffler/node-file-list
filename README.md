@@ -2,6 +2,9 @@
 ## Do what other web servers can do by default!
 
 Need to document I guess...
+It's pretty simple. For now, pull from github, run ``$ file-list -r [directory path to serve]``, and then run ``$ node file-list.js``.
+You can use whatever method you want to monitor the process. Ease of install with NPM is coming around the bend.
+
 
 # LICENSE - MIT
 Copyright (c) 2013 Benjamin Leffler
