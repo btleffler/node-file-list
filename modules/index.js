@@ -8,12 +8,12 @@ var pathLib = require("path"),
     incompleteFiles;
 
 function makeSafePath(path, browserSep) {
-	path = path.replace(root_dir, '');
-	
-	if (pathLib.sep !== '/' && browserSep)
-		path = path.replace(config.globalPathSepExp, '/');
-	
-	return path;
+    path = path.replace(root_dir, '');
+
+    if (pathLib.sep !== '/' && browserSep)
+        path = path.replace(config.globalPathSepExp, '/');
+
+    return path;
 }
 
 /*
@@ -34,36 +34,36 @@ var File = function File (path, collector, index, stats) {
     this.stats = stats;
     
     function finish() {
-	self.emit("ready", self);
-	
-	if (incompleteFiles !== false) {
-	    if (--incompleteFiles <= 0)
-		self.collector.emit("ready", self.collector);
+        self.emit("ready", self);
+
+        if (incompleteFiles !== false) {
+            if (--incompleteFiles <= 0)
+                self.collector.emit("ready", self.collector);
 	}
     }
-    
-    fs.exists(path, function (exists) {
-	// Huh?
-	if (!exists) {
-	    self.destroy();
-	    finish();
-	    console.log("Something is wrong with this. " + path);
-	    return;
-	}
-	
-	if (self.stats)
-	    finish();
-	else {
-	    fs.stat(path, function (err, stats) {
-		if (err) {
-		    console.log(err);
-		    self.destroy();
-		}
 
-		self.stats = stats;
-		finish();
-	    });
-	}
+    fs.exists(path, function (exists) {
+        // Huh?
+        if (!exists) {
+            self.destroy();
+            finish();
+            console.log("Something is wrong with this. " + path);
+            return;
+        }
+
+        if (self.stats)
+            finish();
+        else {
+            fs.stat(path, function (err, stats) {
+                if (err) {
+                    console.log(err);
+                    self.destroy();
+                }
+
+                self.stats = stats;
+                finish();
+            });
+        }
     });
 
     return this;
@@ -106,19 +106,19 @@ File.prototype.size = function fileSize () {
 
 File.prototype.date = function fileDate() {
     if (this.timeObject)
-	return this.timeObject;
+        return this.timeObject;
     
     var mtime = this.stats.mtime;
     this.timeObject = {};
     this.timeObject.time = mtime.toLocaleTimeString();
     this.timeObject.date = mtime.toLocaleDateString();
-    
+
     return this.timeObject;
 }
 
 File.prototype.getPath = function fileGetPath (browserSep) {
-	browserSep = typeof browserSep === "undefined" ? false : browserSep;
-	return makeSafePath(this.path, browserSep);
+    browserSep = typeof browserSep === "undefined" ? false : browserSep;
+    return makeSafePath(this.path, browserSep);
 }
 
 /*
@@ -127,26 +127,26 @@ File.prototype.getPath = function fileGetPath (browserSep) {
  */
 File.prototype.bootstrapIcon = function fileBootstrapIcon () {
     var iconClass = "hdd", // Default
-    	text = [ ".txt", ".doc", ".docx", ".rtf", ".pdf" ],
-    	archive = [ ".zip", ".rar", ".7z", ".dmg", ".gz" ],
-    	image = [ ".jpg", ".jpeg", ".png", ".gif", ".bmp" ],
-    	sound = [ ".mp3", ".wav", ".ape", ".flac", ".mp4", ".midi" ],
-    	video = [ ".avi", ".mkv", ".mov", ".hdmov", ".mpeg" ]
-    	extension = this.extension;
-    
+        text = [ ".txt", ".doc", ".docx", ".rtf", ".pdf" ],
+        archive = [ ".zip", ".rar", ".7z", ".dmg", ".gz" ],
+        image = [ ".jpg", ".jpeg", ".png", ".gif", ".bmp" ],
+        sound = [ ".mp3", ".wav", ".ape", ".flac", ".mp4", ".midi" ],
+        video = [ ".avi", ".mkv", ".mov", ".hdmov", ".mpeg" ]
+        extension = this.extension;
+
     if (extension === '')
-	iconClass = "folder-open";
+        iconClass = "folder-open";
     else if (-1 !== text.indexOf(extension))
-    	iconClass = "align-justify";
+        iconClass = "align-justify";
     else if (-1 !== archive.indexOf(extension))
-    	iconClass = "compressed";
+        iconClass = "compressed";
     else if (-1 !== image.indexOf(extension))
-    	iconClass = "picture";
+        iconClass = "picture";
     else if (-1 !== sound.indexOf(extension))
-    	iconClass = "music";
+        iconClass = "music";
     else if (-1 !== video.indexOf(extension))
-	iconClass = "film";
-    
+        iconClass = "film";
+
     return "glyphicon-" + iconClass;
 };
 
@@ -165,44 +165,44 @@ var FileCollector = function FileCollector (directory) {
     this.path = directory = decodeURI(directory);
 
     fs.exists(directory, function (exists) {
-	if (!exists) {
-	    self.emit("notFound", self);
-	    return;
-	}
-	
-	fs.stat(directory, function (err, stats) {
-	    if (err) throw err;
-		    
-	    // May as well save this information
-	    self.stats = stats;
-		    
-	    // Make sure we can send the correct paths to the File objects
-	    if (stats.isDirectory() && !directory.match(config.pathSepExp))
-	    	directory += pathLib.sep;
-		    
-	    // This is a directory, and we should find the files in it
-	    if(stats.isDirectory()) {
-		fs.readdir(directory, function (err, files) {
-		    if (err) throw err;
-				    
-		    i = 0;
-		    len = files.length;
-		    incompleteFiles = len;
-			    
-		    // Create the file objects that belong to this collector
-		    for (; i < len; i++)
-			self.files.push(new File(directory + files[i], self, i));
-		});
-	    } else { // This is a file, we can just get the info on it
-		incompleteFiles = false;
-		self.file = new File(directory, self, 0, stats);
-		self.files = [ self.file ];
-		self.emit("single", self.file);
-	    }
-	});
+        if (!exists) {
+            self.emit("notFound", self);
+            return;
+        }
+
+        fs.stat(directory, function (err, stats) {
+            if (err) throw err;
+
+            // May as well save this information
+            self.stats = stats;
+
+            // Make sure we can send the correct paths to the File objects
+            if (stats.isDirectory() && !directory.match(config.pathSepExp))
+                directory += pathLib.sep;
+
+            // This is a directory, and we should find the files in it
+            if(stats.isDirectory()) {
+                fs.readdir(directory, function (err, files) {
+                    if (err) throw err;
+
+                    i = 0;
+                    len = files.length;
+                    incompleteFiles = len;
+
+                    // Create the file objects that belong to this collector
+                    for (; i < len; i++)
+                        self.files.push(new File(directory + files[i], self, i));
+                });
+            } else { // This is a file, we can just get the info on it
+                incompleteFiles = false;
+                self.file = new File(directory, self, 0, stats);
+                self.files = [ self.file ];
+                self.emit("single", self.file);
+            }
+        });
     });
 
-    return self;
+    return this;
 };
 
 FileCollector.init = function initFileCollector(directory) {
@@ -212,45 +212,45 @@ FileCollector.init = function initFileCollector(directory) {
 util.inherits(FileCollector, Emitter);
 
 FileCollector.prototype.getPath = function fileCollectorGetPath (browserSep) {
-	browserSep = typeof browserSep === "undefined" ? false : browserSep;
+    browserSep = typeof browserSep === "undefined" ? false : browserSep;
     return makeSafePath(this.path, browserSep);
 };
 
 FileCollector.prototype.getBreadCrumbs = function getBreadCrumbs () {
     var self = this,
-    	path = this.getPath(),
-    	parts, i, len, part, lastPart;
-    
+        path = this.getPath(),
+        parts, i, len, part, lastPart;
+
     function getBreadCrumb (part) {
-	var name = part || pathLib.sep;
-	return {
-	    "name": name,
-	    "path": path.substring(0, path.indexOf(name) + name.length)
-	};
+        var name = part || pathLib.sep;
+        return {
+            "name": name,
+            "path": path.substring(0, path.indexOf(name) + name.length)
+        };
     }
-    
+
     // Special case
     if (path === pathLib.sep) {
-	return {
-	    "parts": [],
-	    "lastPart": getBreadCrumb(pathLib.sep)
-	};
+        return {
+            "parts": [],
+            "lastPart": getBreadCrumb(pathLib.sep)
+        };
     }
-    
+
     parts = path.split(pathLib.sep);
     i = 0;
     lastPart = parts.pop();
-    
+
     // There has to be a better way
     if (lastPart === '')
-	lastPart = parts.pop();
+        lastPart = parts.pop();
 
     len = parts.length;
-    
+
     // Get the bread crumbs before where we are right now
     for (; i < len; i++)
-	parts[i] = getBreadCrumb(parts[i]);
-    
+        parts[i] = getBreadCrumb(parts[i]);
+
     return { "parts": parts, "lastPart": getBreadCrumb(lastPart) };
 };
 

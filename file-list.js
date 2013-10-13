@@ -19,11 +19,11 @@ app.use(app.router);
 
 // development only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+    app.use(express.errorHandler());
 }
 
 app.get('*', routes.file);
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log('File-list server listening on port ' + app.get('port'));
+    console.log('File-list server listening on port ' + app.get('port'));
 });
