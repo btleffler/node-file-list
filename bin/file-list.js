@@ -11,7 +11,7 @@ var program = require("commander"),
 config = config.config;
 
 program
-    .version("0.0.1")
+    .version("0.0.2")
     .option("-r, --root [directory]", "root directory to be served", path.normalize);
 
 program
