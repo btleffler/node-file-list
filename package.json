@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "author": "btleffler <btleffler@gmail.com>",
     "description": "Do what other web servers do by default!",
-    "main": "./lib/file-list.js",
+    "main": "./lib/index.js",
     "bin": { "file-list": "./bin/file-list.js" },
     "repository": {
         "type": "git",

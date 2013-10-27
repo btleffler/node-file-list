@@ -5,7 +5,8 @@ var program = require("commander"),
     path = require("path"),
     config = require("../lib/config"),
     pathSepExp = config.pathSepExp,
-    fileList = require("../lib/file-list.js");
+    fileList = require("../lib"),
+    root_dir = config.root_dir;
 
 config = config.config;
 
@@ -18,9 +19,9 @@ program
     .description("Serve a directory")
     .option("-r, --root [directory]", "rood directory to be served", path.normalize)
     .action(function (options) {
-        var root = options.root || config.root || process.cwd();
+        var root = options.root || root_dir || process.cwd();
         root = root.replace(pathSepExp, '');
-        fileList.startServer(root);
+        fileList.cli.startServer(root);
     });
 
 program.parse(process.argv);
