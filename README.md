@@ -1,10 +1,21 @@
 # Node File List
 ## Do what other web servers can do by default!
 
-Need to document I guess...
-It's pretty simple. For now, pull from github, run ``$ file-list -r [directory path to serve]``, and then run ``$ node file-list.js``.
-You can use whatever method you want to monitor the process. Ease of install with NPM is coming around the bend.
+```
+$ npm install file-list -g
+$ file-list -r [PATH_TO_FILES]
+$ file-list serve
+```
 
+That's it! If you don't set the root directory, you can set it per instance with the optional ``-r`` flag for ``serve``, otherwise it defaults to the directory it was called from.
+
+You can call it from inside your node application too.
+```
+var file-list = require("file-list");
+file-list.startServer();
+```
+
+The ``startServer`` method also accepts a parameter to define the root directory of that instance. If you leave it out, it will default to the default you set from the command line, or the current working directory.
 
 # LICENSE - MIT
 Copyright (c) 2013 Benjamin Leffler
