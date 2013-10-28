@@ -7,7 +7,7 @@ $ cd ~/path/to/awesome/files
 $ file-list serve
 ```
 
-That's it! If you don't set the root directory, you can set it per instance with the optional ``-r`` flag for ``serve``, otherwise it defaults to the directory it was called from.
+That's it! If you don't want to run the command from the root directory, you can set it per instance with the optional ``-r`` flag for ``serve``, otherwise it defaults to the directory it was called from.
 
 You can call it from inside your node application too.
 ```
