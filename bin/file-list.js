@@ -6,7 +6,7 @@ var program = require("commander"),
     pathSepExp = require("../lib/FileCollector.js").terminatingPathSep,
     fileList = require("../lib");
 
-program.version("0.1.0");
+program.version("0.1.1");
 
 program
     .command("serve")
