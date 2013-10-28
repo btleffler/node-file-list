@@ -1,6 +1,6 @@
 {
     "name": "file-list",
-    "version": "0.0.2",
+    "version": "0.1.0",
     "author": "btleffler <btleffler@gmail.com>",
     "description": "Do what other web servers do by default!",
     "main": "./lib/index.js",
@@ -15,7 +15,6 @@
         "express": "3.4.x",
         "jade": "0.35.x",
         "commander": "2.0.x",
-        "nconf": "0.6.x",
         "filesize": "1.10.x"
     },
     "license": "MIT",

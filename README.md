@@ -3,7 +3,7 @@
 
 ```
 $ npm install file-list -g
-$ file-list -r [PATH_TO_FILES]
+$ cd ~/path/to/awesome/files
 $ file-list serve
 ```
 
@@ -15,7 +15,7 @@ var file-list = require("file-list");
 file-list.startServer();
 ```
 
-The ``startServer`` method also accepts a parameter to define the root directory of that instance. If you leave it out, it will default to the default you set from the command line, or the current working directory.
+The ``startServer`` method also accepts a parameter to define the root directory of that instance. If you leave it out, it will default to the current working directory.
 
 # LICENSE - MIT
 Copyright (c) 2013 Benjamin Leffler
