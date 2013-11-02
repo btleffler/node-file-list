@@ -4,7 +4,7 @@
 ```
 $ npm install file-list -g
 $ cd ~/path/to/awesome/files
-$ file-list serve
+$ file-list serve -p 8080
 ```
 
 That's it! If you don't want to run the command from the root directory, you can set it per instance with the optional ``-r`` flag for ``serve``, otherwise it defaults to the directory it was called from.
@@ -12,7 +12,7 @@ That's it! If you don't want to run the command from the root directory, you can
 You can call it from inside your node application too.
 ```
 var file-list = require("file-list");
-file-list.startServer();
+file-list.startServer(root, port);
 ```
 
 The ``startServer`` method also accepts a parameter to define the root directory of that instance. If you leave it out, it will default to the current working directory.
