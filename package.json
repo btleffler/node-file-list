@@ -1,6 +1,6 @@
 {
     "name": "file-list",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "author": "btleffler <btleffler@gmail.com>",
     "description": "Do what other web servers do by default!",
     "main": "./lib/index.js",
