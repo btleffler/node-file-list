@@ -9,10 +9,19 @@ $ file-list serve -p 8080
 
 That's it! If you don't want to run the command from the root directory, you can set it per instance with the optional ``-r`` flag for ``serve``, otherwise it defaults to the directory it was called from.
 
+By default, file-list won't list hidden files. This can be changed by the optional ``--showHidden`` flag for ``serve``.
+
+```
+$ cd ~/path/to/awesome/files
+$ file-list serve --showHidden
+```
+
+*This only affects systems that mark hidden files by a preceding '.' as node doesn't have the ability to tell whether a file is hidden or not in Windows systems.*
+
 You can call it from inside your node application too.
 ```
 var file-list = require("file-list");
-file-list.startServer(root, port);
+file-list.startServer(root, port, showHiddenFiles);
 ```
 
 The ``startServer`` method also accepts a parameter to define the root directory of that instance. If you leave it out, it will default to the current working directory.
