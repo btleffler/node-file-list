@@ -13,11 +13,14 @@ program
     .description("Serve a directory")
     .option("-r, --root [directory]", "root directory to be served", path.normalize)
     .option("-p, --port [port]", "port to listen to", parseInt)
+    .option("--showHidden", "show hidden files (unix only)")
     .action(function (options) {
         var root = options.root || process.cwd(),
-            port = options.port || 3000;
+            port = options.port || 3000,
+            showHidden = options.showHidden || false;
+
         root = root.replace(pathSepExp, '');
-        fileList.cli.startServer(root, port);
+        fileList.cli.startServer(root, port, showHidden);
     });
 
 program.parse(process.argv);
