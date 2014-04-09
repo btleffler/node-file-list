@@ -9,32 +9,32 @@ FileRouter = require "./FileRouter.js"
 app.set "views", __dirname + "/views"
 app.set "view engine", "jade"
 app.use express.logger("dev")
-app.use app.router;
+app.use app.router
 
 # development only
 if "development" == app.get "env"
-  app.use(express.errorHandler());
+	app.use(express.errorHandler())
 
-startServer = (root_dir = process.cwd(), port = 3000, showHiddenFiles = false) ->
-  root_dir = root_dir.replace FileCollector.terminatingPathSep, ''
+start = (root_dir = process.cwd(), port = 3000, showHiddenFiles = false) ->
+	root_dir = root_dir.replace FileCollector.terminatingPathSep, ''
 
-  app.set "root_directory", root_dir
-  app.set "port", port
-  app.set "showHiddenFiles", showHiddenFiles
+	app.set "root_directory", root_dir
+	app.set "port", port
+	app.set "showHiddenFiles", showHiddenFiles
 
-  # Only one route, so simple
-  app.get '*', FileRouter.init(app).generateFileRoute()
+	# Only one route, so simple
+	app.get '*', FileRouter.init(app).generateFileRoute()
 
-  server = http.createServer(app).listen app.get("port"), () ->
-    console.log "File-list server listening on port " + app.get "port"
+	server = http.createServer(app).listen app.get("port"), () ->
+		console.log "File-list server listening on port " + app.get "port"
 
-  {
-    "app": app,
-    "server": server
-  }
+	{
+		"app": app,
+		"server": server
+	}
 
 # Run the server unless we're being require()'d
 if require.main == module
-  startServer()
+	start()
 else
-  exports.cli = { "startServer": startServer }
+	exports.cli = { "startServer": start }
