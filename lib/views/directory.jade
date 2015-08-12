@@ -1,54 +1,54 @@
 extends layout
 
 block nav
-    .collapse.navbar-collapse.navbar-ex1-collapse
-        ul.nav.navbar-nav
-            for breadcrumb in breadcrumbs.parts
-                li
-                    a(href=breadcrumb.path)= breadcrumb.name
-            li.active
-                a(href=breadcrumbs.lastPart.path)= breadcrumbs.lastPart.name
+  .collapse.navbar-collapse.navbar-ex1-collapse
+    ul.nav.navbar-nav
+      for breadcrumb in breadcrumbs.parts
+        li
+          a(href=breadcrumb.path)= breadcrumb.name
+      li.active
+        a(href=breadcrumbs.lastPart.path)= breadcrumbs.lastPart.name
 
 block content
-    if error
-        .alert.alert-danger= error
-    table.table.table-hover
-        thead
-            tr
-                th
-                th.important Name
-                th.hidden-xs Size
-                th.hidden-xs Date
-        tbody
-            - if (files.length)
-                for file in files
-                    tr
-                        td
-                            span(class=[ 'glyphicon', file.bootstrapIcon() ])
-                        td.important
-                            a(href=file.getPath(true), title=file.name)= file.name
-                        td.hidden-xs= file.size()
-                        td.hidden-xs.date-time(title= file.date().time)= file.date().date
-            - else
-                tr
-                    td
-                    td.important No files...
-                    td.hidden-xs
-                    td.hidden-xs
-        script(type="text/javascript").
-            $(function () {
-                var $anchors = $('a');
+  if error
+    .alert.alert-danger= error
+  table.table.table-hover
+    thead
+      tr
+        th
+        th.important Name
+        th.hidden-xs Size
+        th.hidden-xs Date
+    tbody
+      - if (files.length)
+        for file in files
+          tr
+            td
+              span(class=[ 'glyphicon', file.bootstrapIcon() ])
+            td.important
+              a(href=file.getPath(true), title=file.name)= file.name
+            td.hidden-xs= file.size()
+            td.hidden-xs.date-time(title= file.date().time)= file.date().date
+      - else
+        tr
+          td
+          td.important No files...
+          td.hidden-xs
+          td.hidden-xs
+    script(type="text/javascript").
+      $(function () {
+        var $anchors = $('a');
                 
-                $anchors.each(function(index, element) {
-                    var $this = $(element);
+        $anchors.each(function(index, element) {
+          var $this = $(element);
                     
-                    $this.parents("tr").click(function () {
-                        window.location = $this.attr("href");
-                    });
-                });
+          $this.parents("tr").click(function () {
+            window.location = $this.attr("href");
+          });
+        });
                 
-                $('.date-time').tooltip({
-                    "placement": "auto right",
-                    "container": "body"
-                });
-            });
+        $(".date-time").tooltip({
+          "placement": "auto right",
+          "container": "body"
+        });
+      });

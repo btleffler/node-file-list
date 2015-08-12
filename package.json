@@ -1,24 +1,31 @@
 {
-    "name": "file-list",
-    "version": "0.3.0",
-    "author": "btleffler <btleffler@gmail.com>",
-    "description": "Do what other web servers do by default!",
-    "main": "./lib/index.js",
-    "bin": { "file-list": "./bin/file-list.js" },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/btleffler/node-file-list.git"
-    },
-    "bugs": { "url": "https://github.com/btleffler/node-file-list/issues" },
-    "keywords": [ "file", "list" ],
-    "dependencies": {
-        "express": "3.4.x",
-        "jade": "1.3.x",
-        "commander": "2.0.x",
-        "filesize": "1.10.x"
-    },
-    "license": "MIT",
-    "engines": {
-        "node": ">=0.10"
-    }
+  "name": "file-list",
+  "version": "1.0.0",
+  "author": "btleffler <btleffler@gmail.com>",
+  "description": "Do what other web servers do by default!",
+  "main": "./lib/index.js",
+  "bin": {
+    "file-list": "./bin/file-list.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/btleffler/node-file-list.git"
+  },
+  "bugs": {
+    "url": "https://github.com/btleffler/node-file-list/issues"
+  },
+  "keywords": [
+    "file",
+    "list"
+  ],
+  "dependencies": {
+    "async": "^1.4.2",
+    "commander": "^2.8.1",
+    "errorhandler": "^1.4.2",
+    "express": "^4.13.3",
+    "filesize": "^3.1.3",
+    "jade": "^1.11.0",
+    "morgan": "^1.6.1"
+  },
+  "license": "MIT"
 }
